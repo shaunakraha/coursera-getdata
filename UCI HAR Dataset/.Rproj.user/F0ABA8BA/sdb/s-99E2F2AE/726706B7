@@ -1,0 +1,18 @@
+{
+    "contents" : "require(plyr)\ntestSubject <- read.table('test/subject_test.txt', col.names=c('Subject'))\ntrainSubject <- read.table('train/subject_train.txt', col.names=c('Subject'))\nsubjects <- rbind(testSubject,trainSubject)\nxTest <- read.table('test/X_test.txt')\nxTrain <- read.table('train/X_train.txt')\nx <- rbind(xTest,xTrain)\nfeatures <- read.table('features.txt', col.names=c('index', 'labels'))\nlabels <- features$labels\ncolnames(x) <- labels\nfeature_selected <- as.character(features$labels[grepl('mean()|std()', features$labels)])\nfeature_selected <- as.character(feature_selected[!grepl('meanFreq()', feature_selected)])\nfeatures_means_stds <- x[,c(feature_selected)]\nactivitiesTest <- read.table('test/y_test.txt')\ncolnames(activitiesTest) <- 'Activity'\nactivitiesTrain <- read.table('train/y_train.txt')\ncolnames(activitiesTrain) <- 'Activity'\nactivities <- rbind(activitiesTest, activitiesTrain)\nactivities$Activity[activities$Activity=='1'] <- 'WALKING'\nactivities$Activity[activities$Activity=='2'] <- 'WALKING_UPSTAIRS'\nactivities$Activity[activities$Activity=='3'] <- 'WALKING_DOWNSTAIRS'\nactivities$Activity[activities$Activity=='4'] <- 'SITTING'\nactivities$Activity[activities$Activity=='5'] <- 'STANDING'\nactivities$Activity[activities$Activity=='6'] <- 'LAYING'\nnames(features_means_stds) <- gsub('Acc','Acceleration', names(features_means_stds))\nnames(features_means_stds) <- gsub('Mag','Magnitude', names(features_means_stds))\nnames(features_means_stds) <- gsub('Freq','Frequency', names(features_means_stds))\nnames(features_means_stds) <- gsub('-mean','Mean', names(features_means_stds))\nnames(features_means_stds) <- gsub('-std','StandardDeviation', names(features_means_stds))\nnames(features_means_stds) <- gsub('\\\\(|\\\\)','', names(features_means_stds), perl=TRUE)\nall_data <- cbind(subjects,activities,features_means_stds)\naverage_variables <- ddply(all_data, c(\"Subject\",\"Activity\"), numcolwise(mean))\nwrite.table(average_variables, file = \"average_variables.txt\", row.name=FALSE)",
+    "created" : 1437912516453.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2607284269",
+    "id" : "726706B7",
+    "lastKnownWriteTime" : 1437931637,
+    "path" : "~/Documents/Development/DataScience/getdata/UCI HAR Dataset/run_analysis.R",
+    "project_path" : "run_analysis.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
